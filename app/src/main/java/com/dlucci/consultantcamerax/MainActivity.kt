@@ -11,14 +11,14 @@ import android.view.Surface
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
-import androidx.camera.core.CameraX
-import androidx.camera.core.Preview
-import androidx.camera.core.PreviewConfig
+import androidx.camera.core.*
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleOwner
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_main.*
+import java.io.File
 
 private const val REQUEST_CODE_PERMISSIONS = 42
 
@@ -39,10 +39,44 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
     }
 
     private fun startCamera() {
-        val previewConfig = PreviewConfig.Builder().apply {
+        CameraX.bindToLifecycle(this, createPreview(), createImageCapture())
+    }
+
+    private fun createImageCapture(): ImageCapture {
+        val imageCaptureConfig = ImageCaptureConfig.Builder().apply {
             setTargetAspectRatio(Rational(1, 1))
             //TODO:  Reduce resolution once the rest of the app is working
-            setTargetResolution(Size(640, 640))
+            setCaptureMode(ImageCapture.CaptureMode.MIN_LATENCY)
+        }.build()
+
+        val imageCapture = ImageCapture(imageCaptureConfig)
+        capture.setOnClickListener{
+            val file = File(externalMediaDirs.first(),
+                "${System.currentTimeMillis()}.jpg")
+            imageCapture.takePicture(file,
+                object : ImageCapture.OnImageSavedListener{
+                    override fun onImageSaved(file: File) {
+                        Snackbar.make(viewFinder, file.absolutePath, Snackbar.LENGTH_LONG).show()
+                    }
+
+                    override fun onError(useCaseError: ImageCapture.UseCaseError, message: String, cause: Throwable?) {
+                        Snackbar.make(viewFinder, message, Snackbar.LENGTH_LONG).show()
+                    }
+                })
+        }
+
+        return imageCapture
+    }
+
+    private fun createPreview(): Preview {
+        val previewConfig = PreviewConfig.Builder().apply {
+            setTargetAspectRatio(Rational(1, 1))
+            setTargetResolution(
+                Size(
+                    ConstraintLayout.LayoutParams.MATCH_PARENT,
+                    ConstraintLayout.LayoutParams.MATCH_PARENT
+                )
+            )
         }.build()
 
         val preview = Preview(previewConfig)
@@ -57,7 +91,7 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
             updateTransform()
         }
 
-        CameraX.bindToLifecycle(this, preview)
+        return preview
     }
 
     private fun updateTransform() {
