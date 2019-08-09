@@ -10,6 +10,7 @@ import android.util.Size
 import android.view.Surface
 import android.view.View
 import android.view.ViewGroup
+import android.view.Window
 import androidx.appcompat.app.AppCompatActivity
 import androidx.camera.core.*
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -70,7 +71,7 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
 
     private fun createPreview(): Preview {
         val previewConfig = PreviewConfig.Builder().apply {
-            setTargetAspectRatio(Rational(1, 1))
+            setTargetAspectRatio(Rational(2, 1))
             setTargetResolution(
                 Size(
                     ConstraintLayout.LayoutParams.MATCH_PARENT,
