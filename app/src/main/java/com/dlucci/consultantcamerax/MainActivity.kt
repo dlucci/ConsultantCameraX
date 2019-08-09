@@ -1,10 +1,14 @@
 package com.dlucci.consultantcamerax
 
 import android.Manifest
+import android.app.Activity
+import android.content.Context
 import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.TextureView
+import android.view.View
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleOwner
 import com.google.android.material.snackbar.Snackbar
@@ -16,11 +20,16 @@ private val REQUIRED_PERMISSIONS = arrayOf(Manifest.permission.CAMERA)
 
 class MainActivity : AppCompatActivity(), LifecycleOwner {
 
-    private lateinit var viewFinder : TextureView
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        if(allPermissionsGranted()) {
+            viewFinder.post { startCamera()}
+        } else {
+            ActivityCompat.requestPermissions(
+                this, REQUIRED_PERMISSIONS, REQUEST_CODE_PERMISSIONS)
+        }
     }
 
     private fun startCamera() {
@@ -36,7 +45,9 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
             if(allPermissionsGranted()){
                 viewFinder.post { startCamera() }
             } else {
-                Snackbar.make(view_finder, "You did not grant all permissions", Snackbar.LENGTH_LONG).show()
+                Snackbar.make(viewFinder, "You did not grant all permissions", Snackbar.LENGTH_LONG)
+                    .setAction("Request", PermissionListener(this))
+                    .show()
             }
         }
     }
@@ -45,3 +56,13 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
         ContextCompat.checkSelfPermission(this, it) == PackageManager.PERMISSION_GRANTED
     }
 }
+
+class PermissionListener(var activity : Activity) : View.OnClickListener {
+    override fun onClick(p0: View?) {
+        ActivityCompat.requestPermissions(
+            activity, REQUIRED_PERMISSIONS, REQUEST_CODE_PERMISSIONS)
+    }
+
+}
+
+
