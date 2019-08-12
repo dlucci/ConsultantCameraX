@@ -74,9 +74,7 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
 
         val imageCapture = ImageCapture(imageCaptureConfig)
         capture.setOnClickListener{
-            val file = File(PATH,
-                "${System.currentTimeMillis()}.jpg")
-            Log.d("EIFLE", file.absolutePath)
+            val file = File(PATH, "${System.currentTimeMillis()}.jpg")
             imageCapture.takePicture(file,
                 object : ImageCapture.OnImageSavedListener{
                     override fun onImageSaved(file: File) {
