@@ -7,7 +7,6 @@ import android.content.pm.PackageManager
 import android.graphics.Matrix
 import android.graphics.drawable.Drawable
 import android.os.Bundle
-import android.util.Log
 import android.util.Rational
 import android.util.Size
 import android.view.Surface
