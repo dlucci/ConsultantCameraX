@@ -2,15 +2,17 @@ package com.dlucci.consultantcamerax
 
 import android.Manifest
 import android.app.Activity
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Matrix
+import android.graphics.drawable.Drawable
 import android.os.Bundle
+import android.util.Log
 import android.util.Rational
 import android.util.Size
 import android.view.Surface
 import android.view.View
 import android.view.ViewGroup
-import android.view.Window
 import androidx.appcompat.app.AppCompatActivity
 import androidx.camera.core.*
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -23,20 +25,38 @@ import java.io.File
 
 private const val REQUEST_CODE_PERMISSIONS = 42
 
-private val REQUIRED_PERMISSIONS = arrayOf(Manifest.permission.CAMERA)
+private val REQUIRED_PERMISSIONS = arrayOf(Manifest.permission.CAMERA)//, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE)
 
 class MainActivity : AppCompatActivity(), LifecycleOwner {
+
+    lateinit var PATH : File
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        PATH = externalMediaDirs.first()
+
+        preview.setOnClickListener {
+            var i = Intent(this, ImageActivity::class.java)
+            startActivity(i)
+        }
+
         if(allPermissionsGranted()) {
-            viewFinder.post { startCamera()}
+            viewFinder.post {
+                startCamera()
+                populatePreview()
+            }
         } else {
             ActivityCompat.requestPermissions(
                 this, REQUIRED_PERMISSIONS, REQUEST_CODE_PERMISSIONS)
         }
+    }
+
+    private fun populatePreview() {
+        var file = PATH.list()
+        file.reverse()
+        preview.setImageDrawable(Drawable.createFromPath(PATH.path + "/" + file[0]))
     }
 
     private fun startCamera() {
@@ -47,17 +67,21 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
         val imageCaptureConfig = ImageCaptureConfig.Builder().apply {
             setTargetAspectRatio(Rational(1, 1))
             //TODO:  Reduce resolution once the rest of the app is working
-            setCaptureMode(ImageCapture.CaptureMode.MIN_LATENCY)
+            setCaptureMode(ImageCapture.CaptureMode.MAX_QUALITY)
+            setTargetRotation(Surface.ROTATION_90)
+
         }.build()
 
         val imageCapture = ImageCapture(imageCaptureConfig)
         capture.setOnClickListener{
-            val file = File(externalMediaDirs.first(),
+            val file = File(PATH,
                 "${System.currentTimeMillis()}.jpg")
+            Log.d("EIFLE", file.absolutePath)
             imageCapture.takePicture(file,
                 object : ImageCapture.OnImageSavedListener{
                     override fun onImageSaved(file: File) {
-                        Snackbar.make(viewFinder, file.absolutePath, Snackbar.LENGTH_LONG).show()
+                        Snackbar.make(viewFinder, "Image Saved!", Snackbar.LENGTH_LONG).show()
+                        populatePreview()
                     }
 
                     override fun onError(useCaseError: ImageCapture.UseCaseError, message: String, cause: Throwable?) {
@@ -71,13 +95,14 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
 
     private fun createPreview(): Preview {
         val previewConfig = PreviewConfig.Builder().apply {
-            setTargetAspectRatio(Rational(2, 1))
+            setTargetAspectRatio(Rational(1, 1))
             setTargetResolution(
                 Size(
                     ConstraintLayout.LayoutParams.MATCH_PARENT,
                     ConstraintLayout.LayoutParams.MATCH_PARENT
                 )
             )
+            setTargetRotation(Surface.ROTATION_0)
         }.build()
 
         val preview = Preview(previewConfig)
@@ -132,7 +157,7 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
 }
 
 class PermissionListener(var activity : Activity) : View.OnClickListener {
-    override fun onClick(p0: View?) {
+    override fun onClick(view: View?) {
         ActivityCompat.requestPermissions(
             activity, REQUIRED_PERMISSIONS, REQUEST_CODE_PERMISSIONS)
     }

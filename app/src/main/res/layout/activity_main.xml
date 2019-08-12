@@ -22,6 +22,13 @@
             android:layout_margin="24dp"
             app:srcCompat="@android:drawable/ic_menu_camera"
             android:alpha="0.5"
-            android:layout_gravity="bottom|center"
+            android:layout_gravity="bottom|start"
     />
+
+    <ImageView
+            android:id="@+id/preview"
+            android:layout_gravity="bottom|end"
+            android:layout_margin="24dp"
+            android:layout_width="72dp"
+            android:layout_height="72dp"/>
 </FrameLayout>
