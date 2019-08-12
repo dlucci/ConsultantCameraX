@@ -29,7 +29,7 @@ class ImageAdapter(var context : Context) : RecyclerView.Adapter<ImageViewHolder
 
 }
 
-class ImageViewHolder(inflator : LayoutInflater, parent: ViewGroup) : RecyclerView.ViewHolder(inflator.inflate(R.layout.image_row, parent, false)) {
+class ImageViewHolder(inflator : LayoutInflater, parent: ViewGroup) : RecyclerView.ViewHolder(inflator.inflate(R.layout.gallery_row, parent, false)) {
     var imageView : ImageView
 
     init {

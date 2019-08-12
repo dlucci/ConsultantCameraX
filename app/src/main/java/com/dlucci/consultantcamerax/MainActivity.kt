@@ -38,7 +38,7 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
         PATH = externalMediaDirs.first()
 
         preview.setOnClickListener {
-            var i = Intent(this, ImageActivity::class.java)
+            var i = Intent(this, GalleryActivity::class.java)
             startActivity(i)
         }
 
