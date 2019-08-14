@@ -13,4 +13,10 @@ class GalleryActivity : Activity() {
         recyclerView.layoutManager = GridLayoutManager(this, 4)
         recyclerView.adapter = ImageAdapter(this)
     }
+
+    override fun onResume() {
+        super.onResume()
+
+        recyclerView.adapter?.notifyDataSetChanged()
+    }
 }

@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          xmlns:tools="http://schemas.android.com/tools" package="com.dlucci.consultantcamerax">
+          xmlns:tools="http://schemas.android.com/tools"
+          package="com.dlucci.consultantcamerax">
 
-    <uses-permission android:name="android.permission.CAMERA" />
-
+    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.READ_USER_DICTIONARY"/>
 
     <application
             android:allowBackup="true"
@@ -20,6 +21,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".GalleryActivity"/>
+        <activity android:name=".ImageDetailsActivity" />
     </application>
 
 </manifest>

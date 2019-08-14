@@ -52,10 +52,21 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+
+        populatePreview()
+    }
+
     private fun populatePreview() {
         var file = PATH.list()
-        file.reverse()
-        preview.setImageDrawable(Drawable.createFromPath(PATH.path + "/" + file[0]))
+        if(file.isNotEmpty()) {
+            file.reverse()
+            preview.setImageDrawable(Drawable.createFromPath(PATH.path + "/" + file[0]))
+        } else {
+            //REALLY don't love this icon
+            preview.setImageDrawable(resources.getDrawable(android.R.drawable.ic_secure, null))
+        }
     }
 
     private fun startCamera() {
@@ -66,12 +77,12 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
         val imageCaptureConfig = ImageCaptureConfig.Builder().apply {
             setTargetAspectRatio(Rational(1, 1))
             //TODO:  Reduce resolution once the rest of the app is working
-            setCaptureMode(ImageCapture.CaptureMode.MAX_QUALITY)
+            setCaptureMode(ImageCapture.CaptureMode.MIN_LATENCY)
             setTargetRotation(Surface.ROTATION_90)
-
         }.build()
 
         val imageCapture = ImageCapture(imageCaptureConfig)
+
         capture.setOnClickListener{
             val file = File(PATH, "${System.currentTimeMillis()}.jpg")
             imageCapture.takePicture(file,
