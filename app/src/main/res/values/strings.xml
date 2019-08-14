@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">ConsultantCameraX</string>
+    <string name="title_activity_image_details">ImageDetailsActivity</string>
 </resources>

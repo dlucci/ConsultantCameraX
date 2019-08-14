@@ -2,8 +2,10 @@ package com.dlucci.consultantcamerax
 
 import android.Manifest
 import android.app.Activity
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Matrix
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.util.Rational
 import android.util.Size
@@ -26,15 +28,44 @@ private val REQUIRED_PERMISSIONS = arrayOf(Manifest.permission.CAMERA)
 
 class MainActivity : AppCompatActivity(), LifecycleOwner {
 
+    lateinit var PATH : File
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        PATH = externalMediaDirs.first()
+
+        preview.setOnClickListener {
+            var i = Intent(this, GalleryActivity::class.java)
+            startActivity(i)
+        }
+
         if(allPermissionsGranted()) {
-            viewFinder.post { startCamera()}
+            viewFinder.post {
+                startCamera()
+                populatePreview()
+            }
         } else {
             ActivityCompat.requestPermissions(
                 this, REQUIRED_PERMISSIONS, REQUEST_CODE_PERMISSIONS)
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        populatePreview()
+    }
+
+    private fun populatePreview() {
+        var file = PATH.list()
+        if(file.isNotEmpty()) {
+            file.reverse()
+            preview.setImageDrawable(Drawable.createFromPath(PATH.path + "/" + file[0]))
+        } else {
+            //REALLY don't love this icon
+            preview.setImageDrawable(resources.getDrawable(android.R.drawable.ic_secure, null))
         }
     }
 
@@ -47,16 +78,18 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
             setTargetAspectRatio(Rational(1, 1))
             //TODO:  Reduce resolution once the rest of the app is working
             setCaptureMode(ImageCapture.CaptureMode.MIN_LATENCY)
+            setTargetRotation(Surface.ROTATION_90)
         }.build()
 
         val imageCapture = ImageCapture(imageCaptureConfig)
+
         capture.setOnClickListener{
-            val file = File(externalMediaDirs.first(),
-                "${System.currentTimeMillis()}.jpg")
+            val file = File(PATH, "${System.currentTimeMillis()}.jpg")
             imageCapture.takePicture(file,
                 object : ImageCapture.OnImageSavedListener{
                     override fun onImageSaved(file: File) {
-                        Snackbar.make(viewFinder, file.absolutePath, Snackbar.LENGTH_LONG).show()
+                        Snackbar.make(viewFinder, "Image Saved!", Snackbar.LENGTH_LONG).show()
+                        populatePreview()
                     }
 
                     override fun onError(useCaseError: ImageCapture.UseCaseError, message: String, cause: Throwable?) {
@@ -77,6 +110,7 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
                     ConstraintLayout.LayoutParams.MATCH_PARENT
                 )
             )
+            setTargetRotation(Surface.ROTATION_0)
         }.build()
 
         val preview = Preview(previewConfig)
@@ -131,7 +165,7 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
 }
 
 class PermissionListener(var activity : Activity) : View.OnClickListener {
-    override fun onClick(p0: View?) {
+    override fun onClick(view: View?) {
         ActivityCompat.requestPermissions(
             activity, REQUIRED_PERMISSIONS, REQUEST_CODE_PERMISSIONS)
     }
