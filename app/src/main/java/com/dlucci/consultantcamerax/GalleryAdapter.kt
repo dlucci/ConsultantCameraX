@@ -32,12 +32,11 @@ class ImageAdapter(var context : Context) : RecyclerView.Adapter<ImageViewHolder
 }
 
 class ImageViewHolder(inflator : LayoutInflater, parent: ViewGroup) : RecyclerView.ViewHolder(inflator.inflate(R.layout.gallery_row, parent, false)) {
-    var imageView : ImageView
+    var imageView : ImageView = itemView.findViewById(R.id.image)
 
     var fullPath : String? = null
 
     init {
-        imageView = itemView.findViewById(R.id.image)
         imageView.setOnClickListener {
             var i = Intent(itemView.context, ImageDetailsActivity::class.java)
             i.putExtra("details", fullPath)
