@@ -7,6 +7,7 @@ import android.content.pm.PackageManager
 import android.graphics.Matrix
 import android.graphics.drawable.Drawable
 import android.os.Bundle
+import android.util.DisplayMetrics
 import android.util.Rational
 import android.util.Size
 import android.view.Surface
@@ -78,7 +79,6 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
             setTargetAspectRatio(Rational(1, 1))
             //TODO:  Reduce resolution once the rest of the app is working
             setCaptureMode(ImageCapture.CaptureMode.MIN_LATENCY)
-            setTargetRotation(Surface.ROTATION_90)
         }.build()
 
         val imageCapture = ImageCapture(imageCaptureConfig)
@@ -102,15 +102,18 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
     }
 
     private fun createPreview(): Preview {
+
+        val metrics = DisplayMetrics().also { viewFinder.display.getRealMetrics(it) }
+        val screenAspectRatio = Rational(metrics.widthPixels, metrics.heightPixels)
+
         val previewConfig = PreviewConfig.Builder().apply {
-            setTargetAspectRatio(Rational(1, 1))
+            setTargetAspectRatio(screenAspectRatio)
             setTargetResolution(
                 Size(
                     ConstraintLayout.LayoutParams.MATCH_PARENT,
                     ConstraintLayout.LayoutParams.MATCH_PARENT
                 )
             )
-            setTargetRotation(Surface.ROTATION_0)
         }.build()
 
         val preview = Preview(previewConfig)
@@ -135,8 +138,8 @@ class MainActivity : AppCompatActivity(), LifecycleOwner {
         val centerY = viewFinder.height / 2f
 
         val rotationDegrees = when(viewFinder.display.rotation) {
-            Surface.ROTATION_0 -> 90
-            Surface.ROTATION_90 -> 0
+            Surface.ROTATION_0 -> 0
+            Surface.ROTATION_90 -> 90
             Surface.ROTATION_180 -> 180
             Surface.ROTATION_270 -> 270
             else -> return

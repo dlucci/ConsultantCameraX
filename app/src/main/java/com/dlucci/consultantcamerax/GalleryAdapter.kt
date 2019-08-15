@@ -9,17 +9,20 @@ import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.gallery_row.view.*
 
-class ImageAdapter(var context : Context) : RecyclerView.Adapter<ImageViewHolder>() {
+class GalleryAdapter() : RecyclerView.Adapter<ImageViewHolder>() {
 
     var files : Array<String>? = null
 
-    init {
+    lateinit var context: Context
+
+    constructor(context : Context): this() {
+        this.context = context
         files = context.externalMediaDirs.first().list()
         files?.reverse()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ImageViewHolder {
-        return ImageViewHolder(LayoutInflater.from(context), parent)
+        return ImageViewHolder(LayoutInflater.from(parent.context), parent)
     }
 
     override fun getItemCount() = files?.count() ?: 0
