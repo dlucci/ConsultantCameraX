@@ -24,9 +24,9 @@ class ImageDetailsActivity : AppCompatActivity() {
 
         var file = File(path ?: "")
 
-        var fileSize = file.length()/1000.0
+        var fileSize = file.length().toKb(file.length())
 
-        size.text = String.format("%skB",fileSize.toString())
+        size.text = fileSize
 
         trash.setOnClickListener {
             file.delete()
