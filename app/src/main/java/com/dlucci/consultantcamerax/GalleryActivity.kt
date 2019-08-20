@@ -11,7 +11,7 @@ class GalleryActivity : Activity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_gallery)
 
-        recyclerView.layoutManager = StaggeredGridLayoutManager(3,RecyclerView.VERTICAL)
+        recyclerView.layoutManager = StaggeredGridLayoutManager(3, RecyclerView.VERTICAL)
     }
 
     override fun onResume() {

@@ -2,22 +2,17 @@ package com.dlucci.consultantcamerax
 
 import android.content.Context
 import android.graphics.Matrix
-import android.graphics.drawable.Drawable
 import android.util.DisplayMetrics
 import android.util.Rational
-import android.util.Size
 import android.view.Surface
 import android.view.TextureView
 import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.ImageView
-import android.widget.Toast
 import androidx.camera.core.*
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.LifecycleOwner
 import coil.api.load
 import com.google.android.material.snackbar.Snackbar
-import kotlinx.android.synthetic.main.activity_main.*
 import java.io.File
 
 class CameraManager(var context : Context) {
@@ -77,7 +72,6 @@ class CameraManager(var context : Context) {
 
     fun populatePreview(preview : ImageView) {
         var file = PATH.list()
-        Toast.makeText(preview.context, file.size.toString(), Toast.LENGTH_SHORT).show()
         if(file.isNotEmpty()) {
             file.reverse()
             preview.load(File((PATH.path + "/" + file[0])))
