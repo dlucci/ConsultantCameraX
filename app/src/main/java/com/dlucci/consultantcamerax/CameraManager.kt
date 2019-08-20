@@ -11,6 +11,7 @@ import android.view.TextureView
 import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.camera.core.*
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.LifecycleOwner
@@ -82,9 +83,10 @@ class CameraManager(var context : Context) {
 
     fun populatePreview(preview : ImageView) {
         var file = PATH.list()
+        Toast.makeText(preview.context, file.size.toString(), Toast.LENGTH_SHORT).show()
         if(file.isNotEmpty()) {
             file.reverse()
-            preview.load(Drawable.createFromPath(PATH.path + "/" + file[0]))
+            preview.load(File((PATH.path + "/" + file[0])))
         } else {
             //REALLY don't love this icon
             preview.load(context.resources.getDrawable(android.R.drawable.ic_secure, null))
@@ -92,8 +94,10 @@ class CameraManager(var context : Context) {
     }
 
     private fun createImageCapture(capture: ImageButton, viewFinder : TextureView, preview: ImageView): ImageCapture {
+        val metrics = DisplayMetrics().also { viewFinder.display.getRealMetrics(it) }
+        val screenAspectRatio = Rational(metrics.widthPixels, metrics.heightPixels)
         val imageCaptureConfig = ImageCaptureConfig.Builder().apply {
-            setTargetAspectRatio(Rational(1, 1))
+            setTargetAspectRatio(screenAspectRatio)
             //TODO:  Reduce resolution once the rest of the app is working
             setCaptureMode(ImageCapture.CaptureMode.MIN_LATENCY)
         }.build()

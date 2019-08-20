@@ -6,6 +6,7 @@ import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import coil.api.load
 import kotlinx.android.synthetic.main.gallery_row.view.*
@@ -54,6 +55,5 @@ class ImageViewHolder(inflator : LayoutInflater, parent: ViewGroup) : RecyclerVi
         this.fullPath = fullPath
         imageView.load(File(fullPath))
     }
-
 
 }
