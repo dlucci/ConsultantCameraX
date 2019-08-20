@@ -58,6 +58,8 @@ class ImageViewHolder(itemView : View) : RecyclerView.ViewHolder(itemView) {
             placeholder(R.mipmap.ic_launcher)
             error(R.mipmap.ic_launcher_round)
         }
+
+
     }
 
 }

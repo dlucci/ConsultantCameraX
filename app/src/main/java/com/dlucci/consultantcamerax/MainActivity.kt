@@ -18,7 +18,10 @@ private const val REQUEST_CODE_PERMISSIONS = 42
 
 private val REQUIRED_PERMISSIONS = arrayOf(Manifest.permission.CAMERA)
 
-class MainActivity : AppCompatActivity(), LifecycleOwner {
+class MainActivity : AppCompatActivity(), LifecycleOwner, CameraXInterface {
+    override fun updateApdater() {
+
+    }
 
     lateinit var mCamera : CameraManager
 
