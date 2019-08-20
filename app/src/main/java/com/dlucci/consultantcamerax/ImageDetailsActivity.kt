@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.util.Log
 import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatActivity;
+import coil.api.load
 
 import kotlinx.android.synthetic.main.activity_image_details.*
 import java.io.File
@@ -20,7 +21,7 @@ class ImageDetailsActivity : AppCompatActivity() {
 
         path = intent.extras?.getString("details", "")
 
-        image.setImageDrawable(Drawable.createFromPath(path))
+        image.load(File(path))
 
         var file = File(path ?: "")
 

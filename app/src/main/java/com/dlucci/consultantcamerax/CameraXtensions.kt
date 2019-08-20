@@ -10,4 +10,4 @@ fun Long.toKb(param : Long) : String {
     return String.format("%sKB", param/KB)
 }
 
-fun Long.toMb(param : Long) : String = String.format("%MB", param/MB)
+fun Long.toMb(param : Long) : String = String.format("%sMB", param/MB)

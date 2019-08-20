@@ -7,7 +7,9 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
+import coil.api.load
 import kotlinx.android.synthetic.main.gallery_row.view.*
+import java.io.File
 
 class GalleryAdapter() : RecyclerView.Adapter<ImageViewHolder>() {
 
@@ -47,10 +49,10 @@ class ImageViewHolder(inflator : LayoutInflater, parent: ViewGroup) : RecyclerVi
         }
     }
 
-    fun bind(string : String) {
+    fun bind(string : String?) {
         var fullPath = imageView.context.externalMediaDirs.first().path + "/" + string
         this.fullPath = fullPath
-        imageView.setImageDrawable(Drawable.createFromPath(fullPath))
+        imageView.load(File(fullPath))
     }
 
 
