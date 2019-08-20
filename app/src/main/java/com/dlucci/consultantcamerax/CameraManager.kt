@@ -14,6 +14,7 @@ import android.widget.ImageView
 import androidx.camera.core.*
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.LifecycleOwner
+import coil.api.load
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_main.*
 import java.io.File
@@ -83,10 +84,10 @@ class CameraManager(var context : Context) {
         var file = PATH.list()
         if(file.isNotEmpty()) {
             file.reverse()
-            preview.setImageDrawable(Drawable.createFromPath(PATH.path + "/" + file[0]))
+            preview.load(Drawable.createFromPath(PATH.path + "/" + file[0]))
         } else {
             //REALLY don't love this icon
-            preview.setImageDrawable(context.resources.getDrawable(android.R.drawable.ic_secure, null))
+            preview.load(context.resources.getDrawable(android.R.drawable.ic_secure, null))
         }
     }
 
