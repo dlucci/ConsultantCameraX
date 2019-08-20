@@ -39,12 +39,6 @@ class CameraManager(var context : Context) {
 
         val previewConfig = PreviewConfig.Builder().apply {
             setTargetAspectRatio(screenAspectRatio)
-            setTargetResolution(
-                Size(
-                    ConstraintLayout.LayoutParams.MATCH_PARENT,
-                    ConstraintLayout.LayoutParams.MATCH_PARENT
-                )
-            )
         }.build()
 
         val preview = Preview(previewConfig)
