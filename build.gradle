@@ -29,7 +29,7 @@ dependencies {
     ktlint "com.pinterest:ktlint:0.34.2"
 }
 
-task ktlint(type: JavaExec, group: "verification") {
+task kotlint(type: JavaExec, group: "verification") {
     description = "Check Kotlin code style."
     main = "com.pinterest.ktlint.Main"
     classpath = configurations.ktlint
@@ -38,7 +38,7 @@ task ktlint(type: JavaExec, group: "verification") {
     // "--reporter=plain", "--reporter=checkstyle,output=${buildDir}/ktlint.xml"
     // see https://github.com/pinterest/ktlint#usage for more
 }
-check.dependsOn ktlint
+check.dependsOn kotlint
 
 task ktlintFormat(type: JavaExec, group: "formatting") {
     description = "Fix Kotlin code style deviations."
