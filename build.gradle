@@ -34,17 +34,14 @@ task kotlint(type: JavaExec, group: "verification") {
     main = "com.pinterest.ktlint.Main"
     classpath = configurations.ktlint
     args "/**/*.kt"
-    // to generate report in checkstyle format prepend following args:
-    // "--reporter=plain", "--reporter=checkstyle,output=${buildDir}/ktlint.xml"
-    // see https://github.com/pinterest/ktlint#usage for more
 }
 check.dependsOn kotlint
 
-task ktlintFormat(type: JavaExec, group: "formatting") {
+task kotlintFormat(type: JavaExec, group: "formatting") {
     description = "Fix Kotlin code style deviations."
     main = "com.pinterest.ktlint.Main"
     classpath = configurations.ktlint
-    args "-F", "src/**/*.kt"
+    args "-F", "/**/*.kt"
 }
 
 allprojects {
