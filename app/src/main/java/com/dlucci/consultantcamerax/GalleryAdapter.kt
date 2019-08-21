@@ -12,11 +12,11 @@ import java.io.File
 
 class GalleryAdapter() : RecyclerView.Adapter<ImageViewHolder>() {
 
-    var files : Array<String>? = null
+    var files: Array<String>? = null
 
     lateinit var context: Context
 
-    constructor(context : Context): this() {
+    constructor(context: Context) : this() {
         this.context = context
         files = context.externalMediaDirs.first().list()
         files?.reverse()
@@ -31,17 +31,15 @@ class GalleryAdapter() : RecyclerView.Adapter<ImageViewHolder>() {
 
     override fun getItemCount() = files?.count() ?: 0
 
-
     override fun onBindViewHolder(holder: ImageViewHolder, position: Int) {
         holder.bind(files?.get(position) ?: "")
     }
-
 }
 
-class ImageViewHolder(itemView : View) : RecyclerView.ViewHolder(itemView) {
-    var imageView : ImageView = itemView.findViewById(R.id.image)
+class ImageViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    var imageView: ImageView = itemView.findViewById(R.id.image)
 
-    var fullPath : String? = null
+    var fullPath: String? = null
 
     init {
         imageView.setOnClickListener {
@@ -51,15 +49,12 @@ class ImageViewHolder(itemView : View) : RecyclerView.ViewHolder(itemView) {
         }
     }
 
-    fun bind(string : String?) {
+    fun bind(string: String?) {
         var fullPath = imageView.context.externalMediaDirs.first().path + "/" + string
         this.fullPath = fullPath
         imageView.load(File(fullPath)) {
             placeholder(R.mipmap.ic_launcher)
             error(R.mipmap.ic_launcher_round)
         }
-
-
     }
-
 }

@@ -10,9 +10,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleOwner
-import com.crashlytics.android.Crashlytics
 import com.google.android.material.snackbar.Snackbar
-import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.activity_main.capture
+import kotlinx.android.synthetic.main.activity_main.preview
+import kotlinx.android.synthetic.main.activity_main.viewFinder
 
 private const val REQUEST_CODE_PERMISSIONS = 42
 
@@ -20,10 +21,9 @@ private val REQUIRED_PERMISSIONS = arrayOf(Manifest.permission.CAMERA)
 
 class MainActivity : AppCompatActivity(), LifecycleOwner, CameraXInterface {
     override fun updateApdater() {
-
     }
 
-    lateinit var mCamera : CameraManager
+    lateinit var mCamera: CameraManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,7 +36,7 @@ class MainActivity : AppCompatActivity(), LifecycleOwner, CameraXInterface {
 
         mCamera = CameraManager(this)
 
-        if(allPermissionsGranted()) {
+        if (allPermissionsGranted()) {
             viewFinder.post {
                 startCamera()
                 mCamera.populatePreview(preview)
@@ -54,8 +54,8 @@ class MainActivity : AppCompatActivity(), LifecycleOwner, CameraXInterface {
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-        if(requestCode == REQUEST_CODE_PERMISSIONS) {
-            if(allPermissionsGranted()){
+        if (requestCode == REQUEST_CODE_PERMISSIONS) {
+            if (allPermissionsGranted()) {
                 viewFinder.post { startCamera() }
             } else {
                 Snackbar.make(viewFinder, "You did not grant all permissions", Snackbar.LENGTH_LONG)
@@ -74,12 +74,9 @@ class MainActivity : AppCompatActivity(), LifecycleOwner, CameraXInterface {
     }
 }
 
-class PermissionListener(var activity : Activity) : View.OnClickListener {
+class PermissionListener(var activity: Activity) : View.OnClickListener {
     override fun onClick(view: View?) {
         ActivityCompat.requestPermissions(
             activity, REQUIRED_PERMISSIONS, REQUEST_CODE_PERMISSIONS)
     }
-
 }
-
-

@@ -1,19 +1,16 @@
 package com.dlucci.consultantcamerax
 
-import android.graphics.drawable.Drawable
-import android.net.Uri
 import android.os.Bundle
-import android.util.Log
-import com.google.android.material.snackbar.Snackbar
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity
 import coil.api.load
-
-import kotlinx.android.synthetic.main.activity_image_details.*
 import java.io.File
+import kotlinx.android.synthetic.main.activity_image_details.image
+import kotlinx.android.synthetic.main.activity_image_details.size
+import kotlinx.android.synthetic.main.activity_image_details.trash
 
 class ImageDetailsActivity : AppCompatActivity() {
 
-    var path : String? = null
+    var path: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,5 +31,4 @@ class ImageDetailsActivity : AppCompatActivity() {
             finish()
         }
     }
-
 }
