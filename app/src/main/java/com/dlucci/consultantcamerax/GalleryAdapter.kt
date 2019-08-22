@@ -2,7 +2,6 @@ package com.dlucci.consultantcamerax
 
 import android.content.Context
 import android.content.Intent
-import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -24,7 +23,7 @@ class GalleryAdapter() : RecyclerView.Adapter<ImageViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ImageViewHolder {
 
-        var view = LayoutInflater.from(parent.context).inflate(R.layout.gallery_row, parent, false)
+        var view = parent.context.inflate(parent, R.layout.gallery_row)
 
         return ImageViewHolder(view)
     }
