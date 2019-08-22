@@ -29,3 +29,5 @@ fun Context.inflate(parent: ViewGroup, id: Int): View {
         this.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
     return layoutInflater.inflate(id, parent)
 }
+
+fun Context.path() = this.externalMediaDirs.first()
