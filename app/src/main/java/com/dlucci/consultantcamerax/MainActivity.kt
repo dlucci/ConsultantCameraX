@@ -19,9 +19,7 @@ private const val REQUEST_CODE_PERMISSIONS = 42
 
 private val REQUIRED_PERMISSIONS = arrayOf(Manifest.permission.CAMERA)
 
-class MainActivity : AppCompatActivity(), LifecycleOwner, CameraXInterface {
-    override fun updateApdater() {
-    }
+class MainActivity : AppCompatActivity(), LifecycleOwner {
 
     lateinit var mCamera: CameraManager
 
@@ -53,12 +51,17 @@ class MainActivity : AppCompatActivity(), LifecycleOwner, CameraXInterface {
         mCamera.populatePreview(preview)
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
         if (requestCode == REQUEST_CODE_PERMISSIONS) {
             if (allPermissionsGranted()) {
                 viewFinder.post { startCamera() }
             } else {
-                Snackbar.make(viewFinder, "You did not grant all permissions", Snackbar.LENGTH_LONG)
+                Snackbar.make(viewFinder, "You did not grant all permissions",
+                    Snackbar.LENGTH_LONG)
                     .setAction("Request", PermissionListener(this))
                     .show()
             }
@@ -66,7 +69,7 @@ class MainActivity : AppCompatActivity(), LifecycleOwner, CameraXInterface {
     }
 
     private fun startCamera() {
-        mCamera.startCamera(this, capture, viewFinder, preview)
+        mCamera.startCamera(CameraData(this, capture, viewFinder, preview))
     }
 
     private fun allPermissionsGranted() = REQUIRED_PERMISSIONS.all {
