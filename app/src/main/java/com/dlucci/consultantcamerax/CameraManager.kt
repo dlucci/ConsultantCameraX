@@ -6,15 +6,14 @@ import android.util.DisplayMetrics
 import android.util.Rational
 import android.view.Surface
 import android.view.TextureView
+import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageButton
 import android.widget.ImageView
 import androidx.camera.core.CameraX
 import androidx.camera.core.ImageCapture
 import androidx.camera.core.ImageCaptureConfig
 import androidx.camera.core.Preview
 import androidx.camera.core.PreviewConfig
-import androidx.lifecycle.LifecycleOwner
 import coil.api.load
 import com.google.android.material.snackbar.Snackbar
 import java.io.File
@@ -27,13 +26,15 @@ class CameraManager(var context: Context) {
         PATH = context.externalMediaDirs.first()
     }
 
-    fun startCamera(lifecycleOwner: LifecycleOwner, capture: ImageButton, textureView: TextureView, preview: ImageView) {
-        CameraX.bindToLifecycle(lifecycleOwner, createPreview(textureView), createImageCapture(capture, textureView, preview))
+    // TODO:  turn arguments into an object
+    fun startCamera(data: CameraData) {
+        CameraX.bindToLifecycle(data.lifecycleOwner, createPreview(data.textureView),
+            createImageCapture(data))
     }
 
-    private fun createPreview(viewFinder: TextureView): Preview {
+    private fun createPreview(viewFinder: TextureView?): Preview {
 
-        val metrics = DisplayMetrics().also { viewFinder.display.getRealMetrics(it) }
+        val metrics = DisplayMetrics().real(viewFinder ?: View(context))
         val screenAspectRatio = Rational(metrics.widthPixels, metrics.heightPixels)
 
         val previewConfig = PreviewConfig.Builder().apply {
@@ -43,7 +44,7 @@ class CameraManager(var context: Context) {
         val preview = Preview(previewConfig)
 
         preview.setOnPreviewOutputUpdateListener {
-            val parent = viewFinder.parent as ViewGroup
+            val parent = viewFinder?.parent as ViewGroup
 
             parent.removeView(viewFinder)
             parent.addView(viewFinder, 0)
@@ -55,13 +56,13 @@ class CameraManager(var context: Context) {
         return preview
     }
 
-    private fun updateTransform(viewFinder: TextureView) {
+    private fun updateTransform(viewFinder: TextureView?) {
         val matrix = Matrix()
 
-        val centerX = viewFinder.width / 2f
-        val centerY = viewFinder.height / 2f
+        val centerX = (viewFinder?.width ?: 0) / 2f
+        val centerY = (viewFinder?.height ?: 0) / 2f
 
-        val rotationDegrees = when (viewFinder.display.rotation) {
+        val rotationDegrees = when (viewFinder?.display?.rotation) {
             Surface.ROTATION_0 -> 0
             Surface.ROTATION_90 -> 90
             Surface.ROTATION_180 -> 180
@@ -81,12 +82,12 @@ class CameraManager(var context: Context) {
             preview.load(File((PATH.path + "/" + file[0])))
         } else {
             // REALLY don't love this icon
-            preview.load(context.resources.getDrawable(android.R.drawable.ic_secure, null))
+            preview.load(context.getImage(android.R.drawable.ic_secure))
         }
     }
 
-    private fun createImageCapture(capture: ImageButton, viewFinder: TextureView, preview: ImageView): ImageCapture {
-        val metrics = DisplayMetrics().also { viewFinder.display.getRealMetrics(it) }
+    private fun createImageCapture(data: CameraData): ImageCapture {
+        val metrics = DisplayMetrics().real(data.textureView ?: View(context))
         val screenAspectRatio = Rational(metrics.widthPixels, metrics.heightPixels)
         val imageCaptureConfig = ImageCaptureConfig.Builder().apply {
             setTargetAspectRatio(screenAspectRatio)
@@ -96,17 +97,23 @@ class CameraManager(var context: Context) {
 
         val imageCapture = ImageCapture(imageCaptureConfig)
 
-        capture.setOnClickListener {
+        data.capture?.setOnClickListener {
             val file = File(PATH, "${System.currentTimeMillis()}.jpg")
             imageCapture.takePicture(file,
                 object : ImageCapture.OnImageSavedListener {
                     override fun onImageSaved(file: File) {
-                        Snackbar.make(viewFinder, "Image Saved!", Snackbar.LENGTH_LONG).show()
-                        populatePreview(preview)
+                        Snackbar.make(data.textureView ?: View(context),
+                            "Image Saved!", Snackbar.LENGTH_LONG).show()
+                        populatePreview(data.preview)
                     }
 
-                    override fun onError(useCaseError: ImageCapture.UseCaseError, message: String, cause: Throwable?) {
-                        Snackbar.make(viewFinder, message, Snackbar.LENGTH_LONG).show()
+                    override fun onError(
+                        useCaseError: ImageCapture.UseCaseError,
+                        message: String,
+                        cause: Throwable?
+                    ) {
+                        Snackbar.make(data.textureView ?: View(context),
+                            message, Snackbar.LENGTH_LONG).show()
                     }
                 })
         }
