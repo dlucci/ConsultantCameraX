@@ -17,7 +17,7 @@ class GalleryAdapter() : RecyclerView.Adapter<ImageViewHolder>() {
 
     constructor(context: Context) : this() {
         this.context = context
-        files = context.externalMediaDirs.first().list()
+        files = context.path().list()
         files?.reverse()
     }
 
@@ -49,7 +49,7 @@ class ImageViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     }
 
     fun bind(string: String?) {
-        var fullPath = imageView.context.externalMediaDirs.first().path + "/" + string
+        var fullPath = imageView.context.path().path + "/" + string
         this.fullPath = fullPath
         imageView.load(File(fullPath)) {
             placeholder(R.mipmap.ic_launcher)

@@ -20,13 +20,6 @@ import java.io.File
 
 class CameraManager(var context: Context) {
 
-    lateinit var PATH: File
-
-    init {
-        PATH = context.externalMediaDirs.first()
-    }
-
-    // TODO:  turn arguments into an object
     fun startCamera(data: CameraData) {
         CameraX.bindToLifecycle(data.lifecycleOwner, createPreview(data.textureView),
             createImageCapture(data))
@@ -76,10 +69,10 @@ class CameraManager(var context: Context) {
     }
 
     fun populatePreview(preview: ImageView) {
-        var file = PATH.list()
+        var file = context.path().list()
         if (file.isNotEmpty()) {
             file.reverse()
-            preview.load(File((PATH.path + "/" + file[0])))
+            preview.load(File((context.path().path + "/" + file[0])))
         } else {
             // REALLY don't love this icon
             preview.load(context.getImage(android.R.drawable.ic_secure))
@@ -98,7 +91,7 @@ class CameraManager(var context: Context) {
         val imageCapture = ImageCapture(imageCaptureConfig)
 
         data.capture?.setOnClickListener {
-            val file = File(PATH, "${System.currentTimeMillis()}.jpg")
+            val file = File(context.path(), "${System.currentTimeMillis()}.jpg")
             imageCapture.takePicture(file,
                 object : ImageCapture.OnImageSavedListener {
                     override fun onImageSaved(file: File) {
