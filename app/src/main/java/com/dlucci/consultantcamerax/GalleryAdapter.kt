@@ -1,7 +1,7 @@
 package com.dlucci.consultantcamerax
 
 import android.content.Context
-import android.content.Intent
+import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -40,14 +40,6 @@ class ImageViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
     var fullPath: String? = null
 
-    init {
-        imageView.setOnClickListener {
-            var i = Intent(itemView.context, ImageDetailsActivity::class.java)
-            i.putExtra("details", fullPath)
-            imageView.context.startActivity(i)
-        }
-    }
-
     fun bind(string: String?) {
         var fullPath = imageView.context.path().path + "/" + string
         this.fullPath = fullPath
@@ -55,5 +47,9 @@ class ImageViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             placeholder(R.mipmap.ic_launcher)
             error(R.mipmap.ic_launcher_round)
         }
+
+        val bundle = Bundle()
+        bundle.putString("path", fullPath)
+        imageView.setNavigate(R.id.action_to_details, bundle)
     }
 }

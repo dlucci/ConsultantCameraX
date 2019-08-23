@@ -2,10 +2,12 @@ package com.dlucci.consultantcamerax
 
 import android.content.Context
 import android.graphics.drawable.Drawable
+import android.os.Bundle
 import android.util.DisplayMetrics
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.Navigation
 
 const val KB = 1000.0
 const val MB = 10000.0
@@ -27,7 +29,10 @@ fun DisplayMetrics.real(view: View) =
 fun Context.inflate(parent: ViewGroup, id: Int): View {
     var layoutInflater: LayoutInflater =
         this.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-    return layoutInflater.inflate(id, parent)
+    return layoutInflater.inflate(id, parent, false)
 }
 
 fun Context.path() = this.externalMediaDirs.first()
+
+fun View.setNavigate(action: Int, bundle: Bundle) =
+    this.setOnClickListener(Navigation.createNavigateOnClickListener(action, bundle))

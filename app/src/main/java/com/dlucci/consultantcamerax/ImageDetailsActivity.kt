@@ -4,9 +4,9 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import coil.api.load
 import java.io.File
-import kotlinx.android.synthetic.main.activity_image_details.image
-import kotlinx.android.synthetic.main.activity_image_details.size
-import kotlinx.android.synthetic.main.activity_image_details.trash
+import kotlinx.android.synthetic.main.fragment_details.image
+import kotlinx.android.synthetic.main.fragment_details.size
+import kotlinx.android.synthetic.main.fragment_details.trash
 
 class ImageDetailsActivity : AppCompatActivity() {
 
@@ -14,7 +14,7 @@ class ImageDetailsActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_image_details)
+        setContentView(R.layout.fragment_details)
 
         path = intent.extras?.getString("details", "")
 

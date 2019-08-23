@@ -18,11 +18,17 @@ import coil.api.load
 import com.google.android.material.snackbar.Snackbar
 import java.io.File
 
-class CameraManager(var context: Context) {
+class CameraManager(var context: Context?) {
 
     fun startCamera(data: CameraData) {
-        CameraX.bindToLifecycle(data.lifecycleOwner, createPreview(data.textureView),
-            createImageCapture(data))
+        CameraX.bindToLifecycle(
+            data.lifecycleOwner, createPreview(data.textureView),
+            createImageCapture(data)
+        )
+    }
+
+    fun stopCamera() {
+        CameraX.unbindAll()
     }
 
     private fun createPreview(viewFinder: TextureView?): Preview {
@@ -69,13 +75,13 @@ class CameraManager(var context: Context) {
     }
 
     fun populatePreview(preview: ImageView) {
-        var file = context.path().list()
-        if (file.isNotEmpty()) {
-            file.reverse()
-            preview.load(File((context.path().path + "/" + file[0])))
+        var file = context?.path()?.list()
+        if (file?.isNotEmpty() ?: false) {
+            file?.reverse()
+            preview.load(File((context?.path()?.path + "/" + (file?.get(0) ?: ""))))
         } else {
             // REALLY don't love this icon
-            preview.load(context.getImage(android.R.drawable.ic_secure))
+            preview.load(context?.getImage(android.R.drawable.ic_secure))
         }
     }
 
@@ -91,12 +97,14 @@ class CameraManager(var context: Context) {
         val imageCapture = ImageCapture(imageCaptureConfig)
 
         data.capture?.setOnClickListener {
-            val file = File(context.path(), "${System.currentTimeMillis()}.jpg")
+            val file = File(context?.path(), "${System.currentTimeMillis()}.jpg")
             imageCapture.takePicture(file,
                 object : ImageCapture.OnImageSavedListener {
                     override fun onImageSaved(file: File) {
-                        Snackbar.make(data.textureView ?: View(context),
-                            "Image Saved!", Snackbar.LENGTH_LONG).show()
+                        Snackbar.make(
+                            data.textureView ?: View(context),
+                            "Image Saved!", Snackbar.LENGTH_LONG
+                        ).show()
                         populatePreview(data.preview)
                     }
 
@@ -105,8 +113,10 @@ class CameraManager(var context: Context) {
                         message: String,
                         cause: Throwable?
                     ) {
-                        Snackbar.make(data.textureView ?: View(context),
-                            message, Snackbar.LENGTH_LONG).show()
+                        Snackbar.make(
+                            data.textureView ?: View(context),
+                            message, Snackbar.LENGTH_LONG
+                        ).show()
                     }
                 })
         }

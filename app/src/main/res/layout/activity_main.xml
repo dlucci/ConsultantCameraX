@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
+<LinearLayout
         android:id="@+id/constraint"
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
@@ -8,26 +8,12 @@
         android:layout_height="match_parent"
         tools:context=".MainActivity">
 
-    <TextureView
-    android:id="@+id/viewFinder"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    <fragment
+        android:id="@+id/nav_host_fragment"
+        android:name="androidx.navigation.fragment.NavHostFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:defaultNavHost="true"
+        app:navGraph="@navigation/nav_graph"
     />
-
-    <ImageButton
-            android:id="@+id/capture"
-            android:layout_width="72dp"
-            android:layout_height="72dp"
-            android:layout_margin="24dp"
-            app:srcCompat="@android:drawable/ic_menu_camera"
-            android:alpha="0.5"
-            android:layout_gravity="bottom|start"
-    />
-
-    <ImageView
-            android:id="@+id/preview"
-            android:layout_gravity="bottom|end"
-            android:layout_margin="24dp"
-            android:layout_width="72dp"
-            android:layout_height="72dp"/>
-</FrameLayout>
+</LinearLayout>
