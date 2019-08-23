@@ -18,7 +18,7 @@ class GalleryAdapter() : RecyclerView.Adapter<ImageViewHolder>() {
     constructor(context: Context) : this() {
         this.context = context
         files = context.path().list()
-        files?.reverse()
+        files?.rSort()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ImageViewHolder {

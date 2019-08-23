@@ -36,3 +36,8 @@ fun Context.path() = this.externalMediaDirs.first()
 
 fun View.setNavigate(action: Int, bundle: Bundle) =
     this.setOnClickListener(Navigation.createNavigateOnClickListener(action, bundle))
+
+fun Array<out String>.rSort() {
+    this.sort()
+    this.reverse()
+}

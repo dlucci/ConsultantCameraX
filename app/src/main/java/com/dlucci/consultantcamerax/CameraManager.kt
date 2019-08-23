@@ -77,7 +77,7 @@ class CameraManager(var context: Context?) {
     fun populatePreview(preview: ImageView) {
         var file = context?.path()?.list()
         if (file?.isNotEmpty() ?: false) {
-            file?.reverse()
+            file?.rSort()
             preview.load(File((context?.path()?.path + "/" + (file?.get(0) ?: ""))))
         } else {
             // REALLY don't love this icon
