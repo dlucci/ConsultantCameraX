@@ -33,7 +33,7 @@ class DetailsFragment : Fragment() {
 
         image.load(file)
 
-        var fileSize = file.length().toKb(file.length())
+        var fileSize = file.length().toKb()
 
         size.text = fileSize
 
