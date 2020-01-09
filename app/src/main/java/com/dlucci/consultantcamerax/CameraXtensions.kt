@@ -12,14 +12,14 @@ import androidx.navigation.Navigation
 const val KB = 1000.0
 const val MB = 10000.0
 
-fun Long.toKb(param: Long): String {
-    if ((param / KB) >= 1000)
-        return param.toMb(param)
+fun Long.toKb(): String {
+    if ((this / KB) >= 1000)
+        return this.toMb()
 
-    return String.format("%sKB", param / KB)
+    return String.format("%sKB", this / KB)
 }
 
-fun Long.toMb(param: Long): String = String.format("%sMB", param / MB)
+fun Long.toMb(): String = String.format("%sMB", this / MB)
 
 fun Context.getImage(id: Int): Drawable = this.resources.getDrawable(id, null)
 
